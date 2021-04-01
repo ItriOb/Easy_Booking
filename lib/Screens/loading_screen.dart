@@ -21,9 +21,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void getCityData() async{
     City city = City();
     var cityData = await city.getLocationCity();
-    Navigator.push(context, MaterialPageRoute(builder: (context){
-      return HomeScreen(city: cityData);
+    dynamic cityName = cityData['results'][0]['components']['city'];
+    dynamic countryName = cityData['results'][0]['components']['country'];
+    if(cityName==null){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+        return HomeScreen(country: countryName,);
+      }));
+    }else Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+      return HomeScreen(city: cityName);
     }));
+
   }
   @override
   Widget build(BuildContext context) {

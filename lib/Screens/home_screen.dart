@@ -5,8 +5,9 @@ import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   static const id = 'home_screen';
-  HomeScreen({this.city});
+  HomeScreen({this.city,this.country});
   final city;
+  final country;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -33,13 +34,19 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     return selectedDate;
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    print(widget.city);
+    print(widget.country);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white,
           centerTitle: true,
           title: SizedBox(
             height: 75,
@@ -51,12 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {},
             ),
           )),
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            color: Colors.black,
+            color: Colors.white,
             child: Column(
               children: [
                 Text(
@@ -287,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.all(30),
               height: 300,
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Color(0xffebcb9b),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
