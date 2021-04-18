@@ -17,3 +17,8 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(10.0)),
   ),
 );
+const kTextDecoration = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+  fontFamily: 'Montserrat',
+);
