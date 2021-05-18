@@ -1,13 +1,20 @@
 import 'package:easy_booking/Screens/details_screen.dart';
+import 'package:easy_booking/Screens/results_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_booking/constants.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ReusableCard extends StatelessWidget {
-  const ReusableCard({this.hotelRating,this.image});
+  const ReusableCard({this.hotelRating,this.hotelImage,this.hotelPrice,this.hotelName,this.hotelLocation,this.hotelDetail});
 
   final double hotelRating;
-  final String image;
+  final String hotelImage;
+  final String hotelPrice;
+  final String hotelName;
+  final String hotelLocation;
+  final hotelDetail;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +33,7 @@ class ReusableCard extends StatelessWidget {
               ClipRRect(
                 borderRadius : BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20)),
                 child: Image.network(
-                  'https://html.com/wp-content/uploads/very-large-flamingo.jpg',
+                  (hotelImage==null)?'https://cdn.discordapp.com/attachments/832041179523710976/842789041682251816/Untitled-1.png':hotelImage,
                   height: 200,
                   fit: BoxFit.cover,
                   width: 600,
@@ -41,11 +48,11 @@ class ReusableCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Hotel Name',
+                          hotelName,
                           style: kTextDecoration,
                         ),
                         Text(
-                          '\$ Price',
+                          ' $hotelPrice',
                           style: kTextDecoration,
                         ),
                       ],
@@ -62,7 +69,7 @@ class ReusableCard extends StatelessWidget {
                             SizedBox(
                               width: 5,
                             ),
-                            Text('Location'),
+                            Text(hotelLocation),
                           ],
                         ),
                         Text(
@@ -98,7 +105,12 @@ class ReusableCard extends StatelessWidget {
           ),
         ),
         onTap: (){
-          Navigator.pushNamed(context, DetailsScreen.id);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>DetailsScreen(
+              hotelData: hotelDetail,
+            )),
+          );
         },
       ),
     );

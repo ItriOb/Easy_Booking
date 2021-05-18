@@ -6,12 +6,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ReusableCard2 extends StatelessWidget {
   final String city;
   final String hotelName;
-  final String price;
+  final String hotelPrice;
   final double hotelRating;
   final String hotelImage;
-  ReusableCard2({this.city,this.hotelName,this.price,this.hotelRating,this.hotelImage});
+  final String hotelLocation;
+  final hotelDetail;
+  ReusableCard2({this.city,this.hotelName,this.hotelPrice,this.hotelRating,this.hotelImage,this.hotelLocation,this.hotelDetail});
   @override
   Widget build(BuildContext context) {
+
     return Container(
       width: 300,
       child: InkWell(
@@ -28,7 +31,7 @@ class ReusableCard2 extends StatelessWidget {
                     topRight: Radius.circular(20),
                     topLeft: Radius.circular(20)),
                 child: Image.network(
-                  hotelImage,
+                  (hotelImage==null)?'https://cdn.discordapp.com/attachments/832041179523710976/842789041682251816/Untitled-1.png':hotelImage,
                   height: 200,
                   fit: BoxFit.cover,
                   width: 600,
@@ -47,7 +50,7 @@ class ReusableCard2 extends StatelessWidget {
                           style: kTextDecoration,
                         ),
                         Text(
-                          '\$ $price',
+                          ' $hotelPrice',
                           style: kTextDecoration,
                         ),
                       ],
@@ -64,7 +67,7 @@ class ReusableCard2 extends StatelessWidget {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(city,
+                            Text((hotelLocation != null) ? hotelLocation : " ",
                               style: TextStyle(fontFamily: 'Montserrat'),),
                           ],
                         ),
@@ -104,7 +107,9 @@ class ReusableCard2 extends StatelessWidget {
         ),
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context){
-            return DetailsScreen(hotelImage: hotelImage,);
+            return DetailsScreen(
+              hotelData: hotelDetail,
+            );
           }));
         },
       ),

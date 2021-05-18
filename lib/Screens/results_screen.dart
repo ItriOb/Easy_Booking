@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:easy_booking/constants.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:easy_booking/Services/hotel.dart';
+
 
 
 class ResultsScreen extends StatefulWidget {
   static const id = 'results_screen';
-  ResultsScreen({this.city});
+  ResultsScreen({this.city,this.from,this.to});
   final city;
+  final from;
+  final to;
   @override
   _ResultsScreenState createState() => _ResultsScreenState();
 }
@@ -41,7 +45,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
       backgroundColor: Colors.white,
       body: Container(
         padding: EdgeInsets.only(left: 10,right: 10,bottom: 10),
-        child: ListView(
+        child: Column(
           children: [
             Container(
               padding: EdgeInsets.only(left: 20, top: 15),
@@ -67,13 +71,38 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 ],
               ),
             ),
-
             SizedBox(
               height: 20,
             ),
-            ReusableCard2(city: widget.city,hotelImage: 'https://images.unsplash.com/photo-1596541223130-5d31a73fb6c6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80',hotelRating: 3,hotelName: 'Afoulki',price: '420',),
-            ReusableCard2(city: widget.city,hotelImage: 'https://images.unsplash.com/photo-1568084680786-a84f91d1153c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1267&q=80',hotelRating: 3,hotelName: 'Afoulki',price: '420',),
-
+            Expanded(
+              child: FutureBuilder(
+                  future:Hotel.getHotelWithRoomsInCity(widget.city,widget.from,widget.to),
+                  builder: (context, projectSnap) {
+                    if (projectSnap.connectionState ==
+                        ConnectionState.none) {
+                      //print('project snapshot data is: ${projectSnap.data}');
+                      return Container();
+                    } else if (!projectSnap.hasData) {
+                      return Center(
+                          child: CircularProgressIndicator());
+                    }
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: projectSnap.data.length,
+                      itemBuilder: (BuildContext context, index) {
+                        return ReusableCard2(
+                          hotelName: projectSnap.data[index]['name'],
+                          hotelRating: double.parse(projectSnap.data[index]['stars'].toString()),
+                          hotelLocation: projectSnap.data[index]['city']['ville'],
+                          hotelPrice: projectSnap.data[index]['main_price'],
+                          hotelImage: projectSnap.data[index]['drive_image'],
+                          hotelDetail: projectSnap.data[index],
+                        );
+                      },
+                    );
+                  }),
+            ),
           ],
         ),
       ),

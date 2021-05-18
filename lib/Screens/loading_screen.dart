@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:easy_booking/Screens/home_screen.dart';
 import 'package:easy_booking/Services/city.dart';
+import 'package:easy_booking/Services/hotel.dart';
 
 class LoadingScreen extends StatefulWidget {
   static const id = 'loading_screen';
@@ -15,23 +16,39 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    getCityData();
+    getHotelData();
   }
-  void getCityData() async{
+  void getHotelData() async {
     City city = City();
     var cityData = await city.getLocationCity();
     dynamic cityName = cityData['results'][0]['components']['city'];
-    dynamic countryName = cityData['results'][0]['components']['country'];
-    if(cityName==null){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-        return HomeScreen(country: countryName,);
-      }));
-    }else Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-      return HomeScreen(city: cityName);
-    }));
+    if (cityName == null){
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return HomeScreen(
+              isCity: cityName,
+            );
+          },
+        ),
+      );
+    } else
+      {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return HomeScreen(
+                isCity: cityName,
+              );
+            },
+          ),
+        );
+      }
 
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

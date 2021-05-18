@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:easy_booking/Screens/results_screen.dart';
+import 'package:easy_booking/Services/hotel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_booking/constants.dart';
@@ -7,14 +10,14 @@ import 'package:easy_booking/Config/size_config.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:easy_booking/Components/reusable_card.dart';
-
+import 'package:easy_booking/Screens/search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const id = 'home_screen';
-  HomeScreen({this.city, this.country});
-  final city;
-  final country;
 
+  HomeScreen({this.isCity,this.searchCity});
+  final String isCity;
+  final String searchCity;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -24,45 +27,43 @@ class _HomeScreenState extends State<HomeScreen> {
   final checkinController = TextEditingController();
   final checkoutController = TextEditingController();
   final cityController = TextEditingController();
-  String checkIn;
+
+  DateTime checkIn;
   String checkOut;
   int nAdults = 1;
   int nChildren = 0;
   bool isButtonEnabled = false;
-  double hotelRating=4.5;
+  double hotelRating = 4.5;
 
   bool isEmpty() {
     setState(() {
-      if (cityController.text != "") {
-        isButtonEnabled = true;
-      } else if (cityController.text == "") {
-        isButtonEnabled = false;
-      }
+      isButtonEnabled=true;
     });
     return isButtonEnabled;
   }
 
-  Future<DateTime> _selectDate(BuildContext context) async {
-    DateTime selectedDate;
+  Future<DateTime> _selectDate(
+      BuildContext context, DateTime selectedDate) async {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: selectedDate,
         lastDate: DateTime(2022));
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
+        print(selectedDate);
       });
+
+    }
+
     return selectedDate;
   }
-
   @override
   void initState() {
     // TODO: implement initState
-    print(widget.city);
-    print(widget.country);
+    print(widget.isCity);
   }
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -97,10 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         'Where do you want to stay ?',
                         style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: 'Montserrat',
-                            color: Color(0xffebcb9b),
-                            fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontFamily: 'Montserrat',
+                          color: Color(0xffebcb9b),
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Container(
@@ -109,17 +110,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             TextField(
+                              readOnly: true,
                               onChanged: (value) {
                                 isEmpty();
                               },
+                              onTap: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) =>SearchScreen(isCity: widget.isCity,)),
+                                );
+                              },
                               controller: cityController,
                               decoration: kTextFieldDecoration.copyWith(
-                                  hintText: 'Enter city name ',
+                                  hintText: widget.searchCity,
                                   hintStyle: TextStyle(
-                                    color: Color(0xffebcb9b),
+                                      color: Color(0xffebcb9b),
                                       fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold
-                                  ),
+                                      fontWeight: FontWeight.bold),
                                   prefixIcon: Icon(
                                     Icons.location_on,
                                     color: Color(0xffebcb9b),
@@ -141,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       hintText: 'Check-in',
                                       hintStyle: TextStyle(
                                         color: Color(0xffebcb9b),
-                                          fontFamily: 'Montserrat',
+                                        fontFamily: 'Montserrat',
                                         fontWeight: FontWeight.bold,
                                       ),
                                       suffixIcon: IconButton(
@@ -150,10 +157,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                           color: Color(0xffebcb9b),
                                         ),
                                         onPressed: () async {
-                                          checkIn = DateFormat('yyyy-MM-dd')
-                                              .format(
-                                                  await _selectDate(context));
-                                          checkinController.text = checkIn;
+                                          checkIn = await _selectDate(
+                                              context, DateTime.now());
+                                          setState(() {
+                                            checkinController.text =
+                                                DateFormat('dd-MM-yyyy')
+                                                    .format(checkIn);
+                                          });
+
                                         },
                                       ),
                                     ),
@@ -173,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       hintText: 'Check-out',
                                       hintStyle: TextStyle(
                                         color: Color(0xffebcb9b),
-                                          fontFamily: 'Montserrat',
+                                        fontFamily: 'Montserrat',
                                         fontWeight: FontWeight.bold,
                                       ),
                                       suffixIcon: IconButton(
@@ -182,10 +193,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                           color: Color(0xffebcb9b),
                                         ),
                                         onPressed: () async {
-                                          checkOut = DateFormat('yyyy-MM-dd')
-                                              .format(
-                                                  await _selectDate(context));
-                                          checkoutController.text = checkOut;
+                                            checkOut = DateFormat('dd-MM-yyyy')
+                                                .format(await _selectDate(
+                                                context, checkIn));
+                                            setState(() {
+                                              checkoutController.text = checkOut;
+                                            });
+
+
                                         },
                                       ),
                                     ),
@@ -212,10 +227,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           'Adults',
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xffebcb9b),
-                                              fontFamily: 'Montserrat'
-                                          ),
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xffebcb9b),
+                                              fontFamily: 'Montserrat'),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -273,10 +287,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           'Children',
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xffebcb9b),
-                                              fontFamily: 'Montserrat'
-                                          ),
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xffebcb9b),
+                                              fontFamily: 'Montserrat'),
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -327,19 +340,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               style: TextButton.styleFrom(
                                 primary: Color(0xffebcb9b),
-                                backgroundColor: isButtonEnabled
-                                    ? Colors.black
-                                    : Colors.white,
+                                backgroundColor: Colors.black
                               ),
-                              onPressed: isButtonEnabled
-                                  ? () {
+                              onPressed: () {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
                                         return ResultsScreen(
-                                            city: cityController.text);
+                                          city: widget.searchCity,
+                                          from: checkinController.text,
+                                          to: checkoutController.text,
+                                        );
                                       }));
                                     }
-                                  : null,
                             ),
                           ],
                         ),
@@ -363,7 +375,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Recommended',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20,fontFamily: 'Montserrat'),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              fontFamily: 'Montserrat'),
                         ),
                         SizedBox(
                           height: 10,
@@ -371,16 +385,40 @@ class _HomeScreenState extends State<HomeScreen> {
                         Expanded(
                           child: SizedBox(
                             height: 200,
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                ReusableCard(hotelRating: hotelRating),
-                                ReusableCard(hotelRating: hotelRating),
-                                ReusableCard(hotelRating: hotelRating),
-                                ReusableCard(hotelRating: hotelRating),
-                                ReusableCard(hotelRating: hotelRating),
-                              ],
-                            ),
+                            child: FutureBuilder(
+                                future: (widget.isCity == null)
+                                    ? Hotel.getAllHotels()
+                                    : Hotel.getHotelInCity(widget.isCity),
+                                builder: (context, projectSnap) {
+                                  if (projectSnap.connectionState ==
+                                      ConnectionState.none) {
+                                    //print('project snapshot data is: ${projectSnap.data}');
+                                    return Container();
+                                  } else if (!projectSnap.hasData) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: projectSnap.data.length,
+                                    itemBuilder: (BuildContext context, index) {
+                                      return ReusableCard(
+                                        hotelName: projectSnap.data[index]
+                                            ['name'],
+                                        hotelRating: double.parse(projectSnap
+                                            .data[index]['stars']
+                                            .toString()),
+                                        hotelLocation: projectSnap.data[index]['city']
+                                            ['ville'],
+                                        hotelPrice: projectSnap.data[index]
+                                            ['main_price'],
+                                        hotelImage: projectSnap.data[index]
+                                            ['drive_image'],
+                                        hotelDetail: projectSnap.data[index],
+                                      );
+                                    },
+                                  );
+                                }),
                           ),
                         ),
                       ],
@@ -395,5 +433,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
