@@ -13,7 +13,6 @@ class Networking {
       return jsonDecode(data);
     } else {
       print(response.statusCode);
-      print(url);
     }
   }
 }

@@ -8,7 +8,6 @@ class Hotel {
   static Future<dynamic> getHotelInCity(String city) async{
     Networking networkHelper = Networking(url:'$apiURL/hotels2?city=$city');
     var hotelInCityData = await networkHelper.getData();
-    print(hotelInCityData);
     return hotelInCityData;
   }
   static Future<dynamic> getHotelWithRoomsInCity(String city,String from, String to) async{
@@ -28,7 +27,6 @@ class Hotel {
   }
 
   static Future<dynamic> getHotelRooms(int hotelId) async{
-    print("asdasdasdasd");
     Networking networkHelper = Networking(url:'$apiURL/room?from=10-10-2021&to=10-12-2021&id=$hotelId');
     var allCities = await networkHelper.getData();
     return allCities;

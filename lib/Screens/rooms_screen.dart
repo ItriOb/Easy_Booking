@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_booking/Services/hotel.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:easy_booking/Screens/personal_infos_screen.dart';
 
 class RoomsScreen extends StatefulWidget {
   RoomsScreen({this.hotelId});
@@ -59,7 +60,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
           ),
           Expanded(
             child: FutureBuilder(
-                future: Hotel.getHotelRooms(6),
+                future: Hotel.getHotelRooms(widget.hotelId),
                 builder: (context, projectSnap) {
                   if (projectSnap.connectionState == ConnectionState.none) {
                     //print('project snapshot data is: ${projectSnap.data}');
@@ -75,7 +76,13 @@ class _RoomsScreenState extends State<RoomsScreen> {
                       return Column(
                         children: [
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                return PersonalInfosScreen(
+                                  hotelData: projectSnap.data[index],
+                                );
+                              }));
+                            },
                             child: Container(
                               height: 134,
                               child: Card(
@@ -89,16 +96,12 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                         Padding(
                                           padding: EdgeInsets.all(8),
                                           child: Material(
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20)),
-                                              child: Image.network(
-                                                projectSnap.data[index]
-                                                    ['drive_image'],
-                                                height: 100,
-                                                fit: BoxFit.cover,
-                                                width: 200,
-                                              ),
+                                            child: Image.network(
+                                              projectSnap.data[index]
+                                                  ['drive_image'],
+                                              height: 100,
+                                              fit: BoxFit.cover,
+                                              width: 200,
                                             ),
                                           ),
                                         ),

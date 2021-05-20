@@ -300,7 +300,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     onPressed: () {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return RoomsScreen();
+                                        return RoomsScreen(hotelId: widget.hotelData['id'],);
                                       }));
                                     },
                                     elevation: 0,

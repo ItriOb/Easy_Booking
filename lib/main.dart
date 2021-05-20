@@ -6,6 +6,7 @@ import 'package:easy_booking/Screens/details_screen.dart';
 import 'package:easy_booking/Screens/book_screen.dart';
 import 'package:easy_booking/Screens/search_screen.dart';
 import 'package:easy_booking/Screens/rooms_screen.dart';
+import 'package:easy_booking/Screens/personal_infos_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         Book.id:(context)=>Book(),
         RoomsScreen.id:(context)=>RoomsScreen(),
         SearchScreen.id:(context)=>SearchScreen(),
+        PersonalInfosScreen.id:(context)=>PersonalInfosScreen(),
 
       },
     );
