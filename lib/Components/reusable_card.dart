@@ -5,7 +5,7 @@ import 'package:easy_booking/constants.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ReusableCard extends StatelessWidget {
-  const ReusableCard({this.hotelRating,this.hotelImage,this.hotelPrice,this.hotelName,this.hotelLocation,this.hotelDetail});
+  const ReusableCard({this.hotelRating,this.hotelImage,this.hotelPrice,this.hotelName,this.hotelLocation,this.hotelDetail,this.localCity,this.from,this.to,this.nights,this.nAdults,this.nChildren});
 
   final double hotelRating;
   final String hotelImage;
@@ -13,6 +13,12 @@ class ReusableCard extends StatelessWidget {
   final String hotelName;
   final String hotelLocation;
   final hotelDetail;
+  final localCity;
+  final from;
+  final to;
+  final nights;
+  final nAdults;
+  final nChildren;
 
 
 
@@ -109,6 +115,12 @@ class ReusableCard extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) =>DetailsScreen(
               hotelData: hotelDetail,
+              localCity: localCity,
+              nChildren: nChildren,
+              nAdults: nAdults,
+              from: from,
+              to: to,
+              nights: nights,
             )),
           );
         },

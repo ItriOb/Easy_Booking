@@ -6,16 +6,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:easy_booking/Screens/personal_infos_screen.dart';
 
 class RoomsScreen extends StatefulWidget {
-  RoomsScreen({this.hotelId});
+  RoomsScreen({this.hotelId,this.localCity,this.from,this.to,this.nights,this.nAdults,this.nChildren});
 
   static const id = 'rooms_screen';
   final hotelId;
+  final localCity;
+  final from;
+  final to;
+  final nights;
+  final nAdults;
+  final nChildren;
 
   @override
   _RoomsScreenState createState() => _RoomsScreenState();
 }
 
 class _RoomsScreenState extends State<RoomsScreen> {
+   var totalPrice;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +67,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
           ),
           Expanded(
             child: FutureBuilder(
-                future: Hotel.getHotelRooms(widget.hotelId),
+                future: Hotel.getHotelRooms(widget.hotelId,widget.from,widget.to),
                 builder: (context, projectSnap) {
                   if (projectSnap.connectionState == ConnectionState.none) {
                     //print('project snapshot data is: ${projectSnap.data}');
@@ -77,9 +84,20 @@ class _RoomsScreenState extends State<RoomsScreen> {
                         children: [
                           InkWell(
                             onTap: () {
+                              //totalPrice = ((((int.parse(widget.nAdults)+int.parse(widget.nChildren))/int.parse(projectSnap.data[index]['guestnumber'])).ceil())*int.parse(projectSnap.data[index]['price']))*widget.nights;
                               Navigator.push(context, MaterialPageRoute(builder: (context){
                                 return PersonalInfosScreen(
                                   hotelData: projectSnap.data[index],
+                                  localCity: widget.localCity,
+                                  from: widget.from,
+                                  to: widget.to,
+                                  nights: widget.nights,
+                                  roomId: projectSnap.data[index]['id'],
+                                  roomPrice: projectSnap.data[index]['price'],
+                                  nbGuests: projectSnap.data[index]['guestnumber'],
+                                  totalprice: totalPrice,
+                                  nAdults: widget.nAdults,
+                                  nChildren: widget.nChildren,
                                 );
                               }));
                             },

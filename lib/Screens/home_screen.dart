@@ -11,6 +11,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:easy_booking/Components/reusable_card.dart';
 import 'package:easy_booking/Screens/search_screen.dart';
+import 'package:sweetalert/sweetalert.dart';
 
 class HomeScreen extends StatefulWidget {
   static const id = 'home_screen';
@@ -27,9 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final checkinController = TextEditingController();
   final checkoutController = TextEditingController();
   final cityController = TextEditingController();
+  int nights;
 
   DateTime checkIn;
-  String checkOut;
+  DateTime checkOut;
   int nAdults = 1;
   int nChildren = 0;
   bool isButtonEnabled = false;
@@ -52,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        print(selectedDate);
       });
 
     }
@@ -84,6 +85,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )),
       backgroundColor: Colors.white,
+      // floatingActionButton: IconButton(
+      //   icon: Icon(Icons.add),
+      //   onPressed: (){
+      //     SweetAlert.show(context,
+      //         title: "Just show a message",
+      //         subtitle: "Sweet alert is pretty",
+      //         style: SweetAlertStyle.success);
+      //   },
+      // ),
       body: ListView(
         children: [
           SizedBox(
@@ -193,12 +203,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                           color: Color(0xffebcb9b),
                                         ),
                                         onPressed: () async {
-                                            checkOut = DateFormat('dd-MM-yyyy')
-                                                .format(await _selectDate(
-                                                context, checkIn));
+                                            checkOut = await _selectDate(
+                                                context, checkIn);
                                             setState(() {
-                                              checkoutController.text = checkOut;
+                                              checkoutController.text = DateFormat('dd-MM-yyyy')
+                                                  .format(checkOut);
                                             });
+                                            
+                                            nights = checkOut.difference(checkIn).inDays;
+                                            print(nights);
 
 
                                         },
@@ -343,14 +356,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 backgroundColor: Colors.black
                               ),
                               onPressed: () {
+                                print('Adults : $nAdults');
+                                print('Children : $nChildren');
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
                                         return ResultsScreen(
                                           city: widget.searchCity,
                                           from: checkinController.text,
                                           to: checkoutController.text,
+                                          localCity: widget.isCity,
+                                          nights: nights,
+                                          nChildren: nChildren,
+                                          nAdults: nAdults,
                                         );
                                       }));
+                                      print(nights);
                                     }
                             ),
                           ],
@@ -415,6 +435,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         hotelImage: projectSnap.data[index]
                                             ['drive_image'],
                                         hotelDetail: projectSnap.data[index],
+                                        localCity: widget.isCity,
+                                        nAdults: nAdults,
+                                        nChildren: nChildren,
+                                        from: checkinController.text,
+                                        to: checkoutController.text,
+                                        nights: nights,
                                       );
                                     },
                                   );

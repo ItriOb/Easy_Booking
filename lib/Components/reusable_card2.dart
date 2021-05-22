@@ -4,14 +4,22 @@ import 'package:easy_booking/constants.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ReusableCard2 extends StatelessWidget {
+  ReusableCard2({this.city,this.hotelName,this.hotelPrice,this.hotelRating,this.hotelImage,this.hotelLocation,this.hotelDetail,this.localCity,this.from,this.to,this.nights,this.nAdults,this.nChildren});
   final String city;
   final String hotelName;
   final String hotelPrice;
   final double hotelRating;
   final String hotelImage;
   final String hotelLocation;
+  final localCity;
   final hotelDetail;
-  ReusableCard2({this.city,this.hotelName,this.hotelPrice,this.hotelRating,this.hotelImage,this.hotelLocation,this.hotelDetail});
+  final from;
+  final to;
+  final nights;
+  final nAdults;
+  final nChildren;
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -109,6 +117,12 @@ class ReusableCard2 extends StatelessWidget {
           Navigator.push(context, MaterialPageRoute(builder: (context){
             return DetailsScreen(
               hotelData: hotelDetail,
+              localCity: localCity,
+              from: from,
+              to: to,
+              nights: nights,
+              nAdults: nAdults,
+              nChildren: nChildren,
             );
           }));
         },

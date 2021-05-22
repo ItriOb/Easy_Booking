@@ -10,10 +10,15 @@ import 'package:easy_booking/Services/hotel.dart';
 
 class ResultsScreen extends StatefulWidget {
   static const id = 'results_screen';
-  ResultsScreen({this.city,this.from,this.to});
+  ResultsScreen({this.city,this.from,this.to,this.hotelDetail,this.localCity,this.nights,this.nAdults,this.nChildren});
   final city;
   final from;
   final to;
+  final localCity;
+  final hotelDetail;
+  final nights;
+  final nAdults;
+  final nChildren;
   @override
   _ResultsScreenState createState() => _ResultsScreenState();
 }
@@ -98,6 +103,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
                           hotelPrice: projectSnap.data[index]['main_price'],
                           hotelImage: projectSnap.data[index]['drive_image'],
                           hotelDetail: projectSnap.data[index],
+                          localCity: widget.localCity,
+                          from: widget.from,
+                          to: widget.to,
+                          nights: widget.nights,
+                          nAdults: widget.nAdults,
+                          nChildren: widget.nChildren,
                         );
                       },
                     );

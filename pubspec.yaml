@@ -24,6 +24,7 @@ dependencies:
   carousel_slider: ^3.0.0
   local_hero: ^0.1.0
   readmore: ^2.0.0
+  sweetalert: ^0.0.1
 
 
 dev_dependencies:

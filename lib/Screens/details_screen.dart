@@ -10,10 +10,18 @@ import 'package:easy_booking/Screens/rooms_screen.dart';
 import 'package:easy_booking/Services/hotel.dart';
 
 class DetailsScreen extends StatefulWidget {
-  DetailsScreen({this.hotelData});
+  DetailsScreen(
+      {this.hotelData, this.localCity, this.from, this.to, this.nights,this.nAdults,this.nChildren});
 
   static const id = 'details_screen';
   final hotelData;
+  final localCity;
+
+  final from;
+  final to;
+  final nights;
+  final nAdults;
+  final nChildren;
 
   @override
   _DetailsScreenState createState() => _DetailsScreenState();
@@ -190,7 +198,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               Container(
                                 height: 100,
                                 child: FutureBuilder(
-                                    future: Hotel.getHotelRooms(widget.hotelData['id']),
+                                    future: Hotel.getHotelRooms(
+                                        widget.hotelData['id'],widget.from,widget.to),
                                     builder: (context, projectSnap) {
                                       if (projectSnap.connectionState ==
                                           ConnectionState.none) {
@@ -211,7 +220,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                                 onLongPress: () {
                                                   setState(() {
                                                     _showPreview = true;
-                                                    _image = projectSnap.data[index]['drive_image'];
+                                                    _image =
+                                                        projectSnap.data[index]
+                                                            ['drive_image'];
                                                   });
                                                 },
                                                 onLongPressEnd: (details) {
@@ -228,7 +239,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                                         milliseconds: 300),
                                                     curve: Curves.easeInOut,
                                                     child: Image.network(
-                                                      projectSnap.data[index]['drive_image'],
+                                                      projectSnap.data[index]
+                                                          ['drive_image'],
                                                     ),
                                                   ),
                                                 ),
@@ -298,9 +310,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                             BorderRadius.circular(10)),
                                     color: Color(0xffebcb9b),
                                     onPressed: () {
+                                      print(widget.nAdults);
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return RoomsScreen(hotelId: widget.hotelData['id'],);
+                                        return RoomsScreen(
+                                          hotelId: widget.hotelData['id'],
+                                          localCity: widget.localCity,
+                                          from: widget.from,
+                                          to: widget.to,
+                                          nights: widget.nights,
+                                          nAdults: widget.nAdults,
+                                          nChildren: widget.nChildren,
+                                        );
                                       }));
                                     },
                                     elevation: 0,
