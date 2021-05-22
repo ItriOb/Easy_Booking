@@ -100,6 +100,7 @@ class _BookState extends State<Book> {
                                   widget.nChildren,
                                  );
                               print(widget.roomId);
+                              print(bookingId["id"]);
                              var pivotResult = await Hotel.createPivot(bookingId["id"], widget.roomId);
 
                               if(pivotResult['result']=='Successful'){

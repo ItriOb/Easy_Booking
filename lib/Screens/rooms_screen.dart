@@ -132,7 +132,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Text(
-                                                'Room title',
+                                                projectSnap.data[index]['name'],
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'Montserrat'),
