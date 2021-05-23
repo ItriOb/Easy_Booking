@@ -135,7 +135,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 projectSnap.data[index]['name'],
                                                 style: TextStyle(
                                                     color: Colors.black,
-                                                    fontFamily: 'Montserrat'),
+                                                    fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.bold),
                                               ),
                                               Row(
                                                 children: [

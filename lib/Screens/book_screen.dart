@@ -106,8 +106,8 @@ class _BookState extends State<Book> {
                               if(pivotResult['result']=='Successful'){
                                 print("SUCCESS");
                                 SweetAlert.show(context,
-                                    title: "Just show a message",
-                                    subtitle: "Sweet alert is pretty",
+                                    title: "Congratulations",
+                                    subtitle: "Order Completed",
                                     style: SweetAlertStyle.success,
                                     onPress: (bool pressed){
                                      if(pressed){
